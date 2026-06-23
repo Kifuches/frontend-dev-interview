@@ -12,9 +12,13 @@ export function getStaticPaths() {
 }
 
 const material = getMaterial(Astro.params.slug ?? '');
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const materialsUrl = `${base}materials/`;
 
 if (!material) {
-  return Astro.redirect('/materials/');
+  return Astro.redirect(materialsUrl);
 }
 
 const { Content } = material.module;
@@ -37,7 +41,7 @@ const { Content } = material.module;
       <p><strong>{material.stack}</strong></p>
       <p>{material.category}</p>
       <p>{material.words} слов · {material.minutes} мин чтения</p>
-      <p><a class="chip" href="/materials/">К каталогу</a></p>
+      <p><a class="chip" href={materialsUrl}>К каталогу</a></p>
     </aside>
   </main>
   <Footer />

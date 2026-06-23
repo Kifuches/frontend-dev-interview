@@ -2,8 +2,7 @@
 .astro/
 dist/
 node_modules/
-docs/resume.pdf
-
+в
 .env
 .env.*
 !.env.example

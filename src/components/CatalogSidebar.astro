@@ -1,12 +1,17 @@
 ---
 import { materials, navigationTree } from '@/lib/materials';
 
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const homeUrl = base;
+const materialsUrl = `${base}materials/`;
 const searchIndex = materials.map((material) => ({
   title: material.title,
   section: material.section,
   subsection: material.subsection,
   excerpt: material.excerpt,
-  url: `/materials/${material.slug}/`,
+  url: `${base}materials/${material.slug}/`,
   searchText: [
     material.title,
     material.section,
@@ -35,11 +40,11 @@ const searchIndex = materials.map((material) => ({
 
   <div class="sidebar-block">
     <p class="sidebar-label">Explore</p>
-    <a class="stack-link" href="/">
+    <a class="stack-link" href={homeUrl}>
       <span>Overview</span>
       <span>Home</span>
     </a>
-    <a class="stack-link" href="/materials/">
+    <a class="stack-link" href={materialsUrl}>
       <span>All resources</span>
       <span>{materials.length}</span>
     </a>
@@ -60,7 +65,7 @@ const searchIndex = materials.map((material) => ({
                 <div class="nav-subsection">
                   <p>{subsection.title}</p>
                   {subsection.materials.map((material) => (
-                    <a href={`/materials/${material.slug}/`}>{material.title}</a>
+                    <a href={`${base}materials/${material.slug}/`}>{material.title}</a>
                   ))}
                 </div>
               ))}
