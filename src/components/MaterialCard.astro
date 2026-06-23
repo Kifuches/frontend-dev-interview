@@ -1,0 +1,34 @@
+---
+import type { Material } from '@/lib/materials';
+
+type Props = {
+  material: Material;
+};
+
+const { material } = Astro.props;
+
+const tone =
+  material.stack === 'Angular'
+    ? undefined
+    : material.stack === 'JavaScript'
+      ? 'warm'
+      : material.stack === 'React'
+        ? 'blue'
+        : 'rose';
+---
+
+<a class="card" href={`/materials/${material.slug}/`}>
+  <div>
+    <div class="meta-row">
+      <span class="tag" data-tone={tone}>{material.section}</span>
+      <span class="tag">{material.subsection}</span>
+    </div>
+    <h3>{material.title}</h3>
+    <p>{material.excerpt}</p>
+  </div>
+  <div class="meta-row" aria-label="Параметры материала">
+    <span class="chip">{material.minutes} мин</span>
+    <span class="chip">{material.words} слов</span>
+  </div>
+</a>
+ `

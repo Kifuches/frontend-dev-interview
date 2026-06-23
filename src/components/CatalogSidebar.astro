@@ -1,0 +1,160 @@
+---
+import { materials, navigationTree } from '@/lib/materials';
+
+const searchIndex = materials.map((material) => ({
+  title: material.title,
+  section: material.section,
+  subsection: material.subsection,
+  excerpt: material.excerpt,
+  url: `/materials/${material.slug}/`,
+  searchText: [
+    material.title,
+    material.section,
+    material.subsection,
+    material.category,
+    material.excerpt,
+    material.searchText,
+  ].join(' '),
+}));
+---
+
+<aside class="sidebar" aria-label="Разделы каталога">
+  <div class="sidebar-search" data-search-root>
+    <label class="sidebar-label" for="material-search">Поиск</label>
+    <input
+      id="material-search"
+      type="search"
+      placeholder="Change Detection, RxJS..."
+      autocomplete="off"
+      data-search-input
+    />
+    <p class="search-status" data-search-status>По всем материалам</p>
+    <div class="search-results" data-search-results hidden></div>
+    <script is:inline type="application/json" data-search-index set:html={JSON.stringify(searchIndex)} />
+  </div>
+
+  <div class="sidebar-block">
+    <p class="sidebar-label">Explore</p>
+    <a class="stack-link" href="/">
+      <span>Overview</span>
+      <span>Home</span>
+    </a>
+    <a class="stack-link" href="/materials/">
+      <span>All resources</span>
+      <span>{materials.length}</span>
+    </a>
+  </div>
+
+  <div class="sidebar-block">
+    <p class="sidebar-label">Разделы</p>
+    <div class="nav-tree">
+      {
+        navigationTree.map((group) => (
+          <details class="nav-group" open>
+            <summary>
+              <span>{group.section}</span>
+              <span>{group.count}</span>
+            </summary>
+            <div class="nav-children">
+              {group.subsections.map((subsection) => (
+                <div class="nav-subsection">
+                  <p>{subsection.title}</p>
+                  {subsection.materials.map((material) => (
+                    <a href={`/materials/${material.slug}/`}>{material.title}</a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+  for (const root of document.querySelectorAll('[data-search-root]')) {
+    const input = root.querySelector('[data-search-input]');
+    const results = root.querySelector('[data-search-results]');
+    const status = root.querySelector('[data-search-status]');
+    const indexElement = root.querySelector('[data-search-index]');
+    const index = JSON.parse(indexElement?.textContent || '[]');
+
+    const normalize = (value) =>
+      value
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[^\p{Letter}\p{Number}]+/gu, ' ')
+        .trim();
+
+    const escapeHtml = (value) =>
+      String(value).replace(/[&<>"']/g, (char) => {
+        const entities = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;',
+        };
+
+        return entities[char];
+      });
+
+    const renderEmpty = (message) => {
+      results.hidden = true;
+      results.innerHTML = '';
+      status.textContent = message;
+    };
+
+    input?.addEventListener('input', () => {
+      const query = normalize(input.value);
+
+      if (query.length < 2) {
+        renderEmpty('По всем материалам');
+        return;
+      }
+
+      const terms = query.split(/\s+/);
+      const matches = index
+        .map((item) => {
+          const haystack = normalize(item.searchText);
+          const title = normalize(item.title);
+          const section = normalize(`${item.section} ${item.subsection}`);
+          const score = terms.reduce((sum, term) => {
+            if (title.includes(term)) return sum + 8;
+            if (section.includes(term)) return sum + 5;
+            if (haystack.includes(term)) return sum + 1;
+            return -1000;
+          }, 0);
+
+          return { ...item, score };
+        })
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, 'ru'))
+        .slice(0, 8);
+
+      status.textContent = matches.length
+        ? `${matches.length} найдено`
+        : 'Ничего не найдено';
+
+      if (!matches.length) {
+        results.hidden = true;
+        results.innerHTML = '';
+        return;
+      }
+
+      results.hidden = false;
+      results.innerHTML = matches
+        .map(
+          (item) => `
+            <a class="search-result" href="${escapeHtml(item.url)}">
+              <span>${escapeHtml(item.section)} / ${escapeHtml(item.subsection)}</span>
+              <strong>${escapeHtml(item.title)}</strong>
+              <small>${escapeHtml(item.excerpt)}</small>
+            </a>
+          `,
+        )
+        .join('');
+    });
+  }
+</script>

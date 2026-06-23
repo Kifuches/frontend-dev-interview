@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import MaterialCard from '@/components/MaterialCard.astro';
+import CatalogSidebar from '@/components/CatalogSidebar.astro';
+import { materials, stacks } from '@/lib/materials';
+---
+
+<BaseLayout title="Каталог материалов — Interview Prep">
+  <Header />
+  <main class="shell catalog-shell">
+    <CatalogSidebar />
+    <div class="workspace">
+      <section class="page-head">
+        <p class="eyebrow">Resources</p>
+        <h1>Материалы</h1>
+        <p class="lead">Все Markdown-файлы из <code>docs/</code>, разложенные по стеку и формату.</p>
+      </section>
+
+      <div class="resource-list">
+        {
+          stacks.map((stack) => (
+            <section class="section" id={stack.toLowerCase()} aria-labelledby={`${stack}-title`}>
+              <div class="section-head">
+                <h2 id={`${stack}-title`}>{stack}</h2>
+                <span class="chip">
+                  {materials.filter((material) => material.section === stack).length} материалов
+                </span>
+              </div>
+              <div class="grid">
+                {materials
+                  .filter((material) => material.section === stack)
+                  .map((material) => (
+                    <MaterialCard material={material} />
+                  ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,97 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import MaterialCard from '@/components/MaterialCard.astro';
+import CatalogSidebar from '@/components/CatalogSidebar.astro';
+import { getStackSummary, materials } from '@/lib/materials';
+
+const summary = getStackSummary();
+const featured = materials.slice(0, 6);
+const totalMinutes = materials.reduce((sum, material) => sum + material.minutes, 0);
+const taskCount = materials.filter((material) => material.format === 'tasks').length;
+---
+
+<BaseLayout title="Interview Prep — материалы для собеседований">
+  <Header />
+  <main>
+    <div class="shell catalog-shell">
+      <CatalogSidebar />
+      <div class="workspace">
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Interview architecture</p>
+            <h1>Catalog for frontend interview preparation</h1>
+            <p class="lead">
+              Angular, JavaScript, React, задачи по коду, ответы и анализ вакансий в одном
+              навигируемом каталоге на Astro.
+            </p>
+          </div>
+          <div class="hero-panel" aria-label="Быстрый старт">
+            <span class="tag">Quick start</span>
+            <code>npm run dev</code>
+            <p>Markdown в <strong>docs/</strong> автоматически становится страницами каталога.</p>
+          </div>
+        </section>
+
+        <section class="stats" aria-label="Сводка библиотеки">
+          <div class="stat">
+            <strong>{materials.length}</strong>
+            <span>materials</span>
+          </div>
+          <div class="stat">
+            <strong>{summary.length}</strong>
+            <span>domains</span>
+          </div>
+          <div class="stat">
+            <strong>{taskCount}</strong>
+            <span>practice sets</span>
+          </div>
+          <div class="stat">
+            <strong>{totalMinutes}</strong>
+            <span>minutes</span>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="stacks-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Domains</p>
+              <h2 id="stacks-title">Preparation map</h2>
+            </div>
+            <a class="chip" href="/materials/">Open resources</a>
+          </div>
+          <div class="grid">
+            {
+              summary.map((item) => (
+                <a class="domain-card" href={`/materials/#${item.stack.toLowerCase()}`}>
+                  <span class="resource-icon">{item.stack.slice(0, 2)}</span>
+                  <div>
+                    <h3>{item.stack}</h3>
+                    <p>
+                      {item.count} materials · {item.minutes} minutes
+                    </p>
+                  </div>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="featured-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Resources</p>
+              <h2 id="featured-title">Start here</h2>
+            </div>
+            <span class="chip">curated</span>
+          </div>
+          <div class="grid">
+            {featured.map((material) => <MaterialCard material={material} />)}
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

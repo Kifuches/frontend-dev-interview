@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import CatalogSidebar from '@/components/CatalogSidebar.astro';
+import { getMaterial, materials } from '@/lib/materials';
+
+export function getStaticPaths() {
+  return materials.map((material) => ({
+    params: { slug: material.slug },
+  }));
+}
+
+const material = getMaterial(Astro.params.slug ?? '');
+
+if (!material) {
+  return Astro.redirect('/materials/');
+}
+
+const { Content } = material.module;
+---
+
+<BaseLayout title={`${material.title} — Interview Prep`} description={material.excerpt}>
+  <Header />
+  <main class="shell article-wrap">
+    <CatalogSidebar />
+    <article class="article">
+      <div class="meta-row">
+        <span class="tag">{material.stack}</span>
+        <span class="tag">{material.category}</span>
+        <span class="chip">{material.minutes} мин</span>
+      </div>
+      <Content />
+    </article>
+    <aside class="toc" aria-label="Информация о материале">
+      <h2>Материал</h2>
+      <p><strong>{material.stack}</strong></p>
+      <p>{material.category}</p>
+      <p>{material.words} слов · {material.minutes} мин чтения</p>
+      <p><a class="chip" href="/materials/">К каталогу</a></p>
+    </aside>
+  </main>
+  <Footer />
+</BaseLayout>
