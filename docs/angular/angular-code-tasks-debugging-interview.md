@@ -1,4 +1,9 @@
-# Angular 2+ debug-задачи для собеседования
+---
+title: Angular 2+ debug-задачи для собеседования
+section: Задачи
+order: 2
+description: Change Detection, Default, OnPush
+---
 
 Задачи в формате: "вот код, тут не показывается информация, почему и как это исправить". Это хороший формат тренировки под live-coding и устные технические интервью.
 
@@ -13,12 +18,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'app-parent',
   templateUrl: './parent.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ParentComponent {
   user = {
     name: 'Anna',
-    age: 30
+    age: 30,
   };
 
   updateName() {
@@ -40,7 +45,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 @Component({
   selector: 'app-user-card',
   templateUrl: './user-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserCardComponent {
   @Input() user!: { name: string; age: number };
@@ -54,14 +59,18 @@ export class UserCardComponent {
 ```
 
 ### Вопросы
+
 - Почему после нажатия на кнопку имя не меняется в дочернем компоненте?
 - Как это исправить?
 - Какие есть 2-3 корректных варианта решения?
 
 ### Что тут проверяют
+
 - понимание `OnPush`
 - мутабельность vs иммутабельность
 - как Angular понимает, что нужно перерисовать компонент
+
+---
 
 ## Задача 2. В шаблоне не показывается пользователь
 
@@ -80,18 +89,18 @@ interface User {
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html'
+  templateUrl: './profile.component.html',
 })
 export class ProfileComponent {
   user$: Observable<any>;
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
   ) {
     this.user$ = this.route.paramMap.pipe(
-      map(params => params.get('id')),
-      map(id => this.userService.getUser(Number(id)))
+      map((params) => params.get('id')),
+      map((id) => this.userService.getUser(Number(id))),
     );
   }
 }
@@ -113,12 +122,14 @@ getUser(id: number): Observable<User> {
 ```
 
 ### Вопросы
+
 - Почему в шаблоне не показываются `name` и `email`?
 - Какой тип реально лежит в `user$`?
 - Как правильно переписать этот код?
 - Почему здесь лучше использовать именно этот RxJS-оператор?
 
 ### Что тут проверяют
+
 - понимание `async` pipe
 - разницу между `map` и `switchMap`
 - работу с `Observable<Observable<T>>`
