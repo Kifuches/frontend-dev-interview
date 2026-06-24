@@ -36,8 +36,8 @@ const { title, description = 'Материалы для подготовки к 
     --panel: #ffffff;
     --page: #f8fafc;
     --soft: #f2f4f7;
-    --accent: #2563eb;
-    --accent-strong: #1d4ed8;
+    --accent: #fac3ea;
+    --accent-strong: #f4a2cf;
     --accent-soft: #eff6ff;
     --green: #047857;
     --green-soft: #ecfdf3;
@@ -393,6 +393,17 @@ const { title, description = 'Материалы для подготовки к 
   .nav-subsection a:hover {
     background: var(--soft);
     color: var(--accent-strong);
+  }
+
+  .nav-subsection a.is-active,
+  .stack-link.is-active {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-weight: 850;
+  }
+
+  .nav-subsection a.is-active {
+    box-shadow: inset 3px 0 0 var(--accent);
   }
 
   .stack-link {

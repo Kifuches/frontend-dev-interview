@@ -173,6 +173,8 @@ const searchIndex = materials.map((material) => ({
     if (sidebar) {
       const savedScroll = Number(sessionStorage.getItem(scrollKey) || 0);
       const savedGroups = JSON.parse(sessionStorage.getItem(groupsKey) || '[]');
+      const currentPath = new URL(window.location.href).pathname.replace(/\/$/, '');
+      let activeLink = null;
 
       for (const group of sidebar.querySelectorAll('[data-nav-group]')) {
         group.open = savedGroups.includes(group.dataset.navGroup);
@@ -184,7 +186,27 @@ const searchIndex = materials.map((material) => ({
         });
       }
 
+      for (const link of sidebar.querySelectorAll('a[href]')) {
+        const linkPath = new URL(link.href).pathname.replace(/\/$/, '');
+
+        if (linkPath === currentPath) {
+          activeLink = link;
+          link.classList.add('is-active');
+          link.setAttribute('aria-current', 'page');
+        }
+      }
+
+      const activeGroup = activeLink?.closest('[data-nav-group]');
+      if (activeGroup) {
+        activeGroup.open = true;
+      }
+
       requestAnimationFrame(() => {
+        if (activeLink && !savedScroll) {
+          activeLink.scrollIntoView({ block: 'center' });
+          return;
+        }
+
         sidebar.scrollTop = savedScroll;
       });
 
