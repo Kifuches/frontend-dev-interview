@@ -55,7 +55,7 @@ const searchIndex = materials.map((material) => ({
     <div class="nav-tree">
       {
         navigationTree.map((group) => (
-          <details class="nav-group" open>
+          <details class="nav-group" data-nav-group={group.section}>
             <summary>
               <span>{group.section}</span>
               <span>{group.count}</span>
@@ -161,5 +161,46 @@ const searchIndex = materials.map((material) => ({
         )
         .join('');
     });
+  }
+</script>
+
+<script is:inline>
+  {
+    const sidebar = document.querySelector('.sidebar');
+    const scrollKey = 'interview-catalog-sidebar-scroll';
+    const groupsKey = 'interview-catalog-sidebar-open-groups';
+
+    if (sidebar) {
+      const savedScroll = Number(sessionStorage.getItem(scrollKey) || 0);
+      const savedGroups = JSON.parse(sessionStorage.getItem(groupsKey) || '[]');
+
+      for (const group of sidebar.querySelectorAll('[data-nav-group]')) {
+        group.open = savedGroups.includes(group.dataset.navGroup);
+        group.addEventListener('toggle', () => {
+          const openGroups = Array.from(sidebar.querySelectorAll('[data-nav-group][open]')).map(
+            (item) => item.dataset.navGroup,
+          );
+          sessionStorage.setItem(groupsKey, JSON.stringify(openGroups));
+        });
+      }
+
+      requestAnimationFrame(() => {
+        sidebar.scrollTop = savedScroll;
+      });
+
+      sidebar.addEventListener(
+        'scroll',
+        () => {
+          sessionStorage.setItem(scrollKey, String(sidebar.scrollTop));
+        },
+        { passive: true },
+      );
+
+      sidebar.addEventListener('click', (event) => {
+        if (event.target.closest('a')) {
+          sessionStorage.setItem(scrollKey, String(sidebar.scrollTop));
+        }
+      });
+    }
   }
 </script>

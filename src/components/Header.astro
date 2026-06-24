@@ -16,6 +16,70 @@ const materialsUrl = `${base}materials/`;
       <a href={homeUrl}>Catalog</a>
       <a href={materialsUrl}>Resources</a>
       <a href="https://docs.astro.build/" rel="noreferrer" target="_blank">Astro Docs</a>
+      <button class="code-theme-toggle" type="button" data-code-theme-toggle aria-label="Тема блоков кода: темная">
+        <span>Код</span>
+        <svg
+          aria-hidden="true"
+          data-code-theme-icon
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path data-icon-moon d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"></path>
+          <g data-icon-sun style="display: none">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </g>
+        </svg>
+      </button>
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  {
+    const storageKey = 'interview-catalog-code-theme';
+    const root = document.documentElement;
+    const toggles = document.querySelectorAll('[data-code-theme-toggle]');
+    const savedTheme = localStorage.getItem(storageKey);
+    const initialTheme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'dark';
+
+    const applyTheme = (theme) => {
+      root.dataset.codeTheme = theme;
+      localStorage.setItem(storageKey, theme);
+
+      for (const toggle of toggles) {
+        const moon = toggle.querySelector('[data-icon-moon]');
+        const sun = toggle.querySelector('[data-icon-sun]');
+
+        toggle.setAttribute(
+          'aria-label',
+          theme === 'dark' ? 'Тема блоков кода: темная' : 'Тема блоков кода: светлая',
+        );
+
+        if (moon instanceof SVGElement && sun instanceof SVGElement) {
+          moon.style.display = theme === 'light' ? 'none' : '';
+          sun.style.display = theme === 'dark' ? 'none' : '';
+        }
+      }
+    };
+
+    applyTheme(initialTheme);
+
+    for (const toggle of toggles) {
+      toggle.addEventListener('click', () => {
+        applyTheme(root.dataset.codeTheme === 'dark' ? 'light' : 'dark');
+      });
+    }
+  }
+</script>
