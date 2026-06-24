@@ -32,11 +32,14 @@ export class BasicDataStore {
 }
 ```
 
+### Разница между `providers`:
+
 `providedIn` - свойство `@Injectable` декоратора, определяющее где сервис регистрируется. Значения:
 
-- `root` (singleton для всего приложения, tree-shakeable)
-- `any` (новый экземпляр для каждого lazy модуля)
-- `platform` (shared между apps), ModuleType (specific module).
+- **root** - `providedIn: 'root'` Один экземпляр на всё приложение.
+- **platform** - Один экземпляр на всю Angular-платформу. Полезно, если на одной странице работает несколько Angular-приложений и сервис должен быть общим.
+- **any** - Создаёт отдельный экземпляр для каждого лениво загруженного инжектора (`lazy-loaded` модуля/маршрута), а для eagerly-loaded частей приложения используется общий экземпляр.
+- **component providers** - `@Component({ providers:[UserService] })` Каждый экземпляр компонента получит **свой собственный** экземпляр `UserService`. Очень удобно для локального состояния.
 
 `providedIn: "root"` предпочтительнее `providers` в `@NgModule` для tree-shaking и упрощения.
 Tree-shaking с `providedIn: "root"` - сервис удаляется из bundle если не используется.
