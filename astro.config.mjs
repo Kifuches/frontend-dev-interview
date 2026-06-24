@@ -32,6 +32,37 @@ function rewriteMarkdownResourceLinks() {
           const anchor = heading ? `#${slugifyHeading(heading)}` : '';
 
           node.url = `../${slugify(fileName)}/${anchor}`;
+          node.data = {
+            ...node.data,
+            hProperties: {
+              ...node.data?.hProperties,
+              'data-internal-resource': 'true',
+            },
+          };
+        }
+
+        if (Array.isArray(node.children)) {
+          node.children.forEach(visit);
+        }
+      }
+    };
+
+    visit(tree);
+  };
+}
+
+function openExternalLinksInNewTab() {
+  return (tree) => {
+    const visit = (node) => {
+      if (node && typeof node === 'object') {
+        if (
+          node.type === 'element' &&
+          node.tagName === 'a' &&
+          typeof node.properties?.href === 'string' &&
+          /^https?:\/\//.test(node.properties.href)
+        ) {
+          node.properties.target = '_blank';
+          node.properties.rel = 'noreferrer noopener';
         }
 
         if (Array.isArray(node.children)) {
@@ -49,6 +80,7 @@ export default defineConfig({
   base: '/frontend-dev-interview',
   markdown: {
     remarkPlugins: [rewriteMarkdownResourceLinks],
+    rehypePlugins: [openExternalLinksInNewTab],
     shikiConfig: {
       themes: {
         light: 'github-light',

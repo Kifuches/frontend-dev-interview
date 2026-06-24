@@ -41,6 +41,8 @@ const { title, description = 'Материалы для подготовки к 
     --accent-soft: #eff6ff;
     --green: #047857;
     --green-soft: #ecfdf3;
+    --internal-link: #0f766e;
+    --internal-link-soft: #ccfbf1;
     --orange: #b54708;
     --orange-soft: #fff7ed;
     --rose: #be123c;
@@ -704,6 +706,19 @@ const { title, description = 'Материалы для подготовки к 
     font-weight: 800;
   }
 
+  .article a[data-internal-resource='true'] {
+    color: var(--internal-link);
+    text-decoration: underline;
+    text-decoration-color: var(--internal-link-soft);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+  }
+
+  .article a[data-internal-resource='true']:hover {
+    color: #115e59;
+    text-decoration-color: var(--internal-link);
+  }
+
   .article pre {
     overflow-x: auto;
     border: 1px solid var(--code-border);
@@ -731,6 +746,13 @@ const { title, description = 'Материалы для подготовки к 
     background: var(--code-bg);
     color: #374151;
     font-size: 0.92em;
+  }
+
+  .article a[data-internal-resource='true'] :not(pre) > code,
+  .article a[data-internal-resource='true'] code {
+    border-color: color-mix(in srgb, var(--internal-link) 28%, var(--line));
+    background: color-mix(in srgb, var(--internal-link-soft) 55%, white);
+    color: inherit;
   }
 
   .article blockquote {
