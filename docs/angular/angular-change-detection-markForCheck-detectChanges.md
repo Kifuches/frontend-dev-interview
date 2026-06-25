@@ -11,7 +11,7 @@ source: ''
 
 `detectChanges()` запускает проверку сразу для текущего компонента и его дочерних компонентов.
 
-### markForCheck()
+## markForCheck()
 
 ```ts
 constructor(private cdr: ChangeDetectorRef) {}
@@ -28,7 +28,7 @@ update() {
 
 Особенно полезно с `OnPush`.
 
-### detectChanges()
+## detectChanges()
 
 ```ts
 constructor(private cdr: ChangeDetectorRef) {}
@@ -45,7 +45,7 @@ Angular сразу проверит текущий компонент и его 
 
 ---
 
-### Как отвечать на интервью
+## Как отвечать на интервью
 
 `markForCheck()` — отложенно помечает компонент для проверки.
 
