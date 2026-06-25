@@ -1,7 +1,7 @@
 ---
-title: 'InjectionToken'
-section: 'Angular'
-subsection: 'Dependency Injection'
+title: InjectionToken
+section: Angular
+subsection: Dependency Injection
 order: 40
 ---
 

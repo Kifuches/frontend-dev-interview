@@ -1,10 +1,10 @@
 ---
-title: 'Functional Interceptors'
-section: 'Angular'
-subsection: 'Interceptors'
+title: Functional Interceptors
+section: Angular
+subsection: Interceptors
 order: 80
-description: ''
-source: ''
+description:
+source:
 ---
 
 [Документация](https://angular.dev/guide/http/interceptors#configuring-interceptors)

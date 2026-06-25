@@ -1,7 +1,7 @@
 ---
-title: 'Создание и использование сервисов'
-section: 'Angular'
-subsection: 'Dependency Injection'
+title: Создание и использование сервисов
+section: Angular
+subsection: Dependency Injection
 order: 40
 ---
 

@@ -1,7 +1,7 @@
 ---
-title: 'Основное'
-section: 'Angular'
-subsection: 'Guards'
+title: Основное
+section: Angular
+subsection: Guards
 order: 80
 description: ''
 source: ''
