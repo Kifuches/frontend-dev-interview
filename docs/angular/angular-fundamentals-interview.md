@@ -1,11 +1,12 @@
 ---
-title: "Основы Angular"
-section: "Angular"
-subsection: "Fundamentals"
+title: Основы Angular
+section: Angular
+subsection: Fundamentals
 order: 30
-description: "Материал из большого списка вопросов для собеседования: Основы Angular."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description:
+source:
 ---
+
 ## **Основы Angular**
 
 1. Как работает bootstrap Angular приложения?
@@ -44,11 +45,11 @@ source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab
    Например
 
    ```ts
-   platformBrowser()
+   platformBrowser();
 
    // или
 
-   platformBrowserDynamic()
+   platformBrowserDynamic();
    ```
 
    Платформа содержит сервисы, которые существуют в единственном экземпляре:
@@ -228,13 +229,13 @@ source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab
    Например:
 
    ```ts
-   click
-   Promise
-   setTimeout
-   XHR
-   fetch
-   WebSocket
-   setInterval
+   click;
+   Promise;
+   setTimeout;
+   XHR;
+   fetch;
+   WebSocket;
+   setInterval;
    ```
 
    После завершения любой такой операции Zone.js сообщает Angular:
@@ -357,10 +358,7 @@ source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab
    Например:
 
    ```ts
-   imports: [
-       CommonModule,
-       RouterModule
-   ]
+   imports: [CommonModule, RouterModule];
    ```
 
    Преимущества:

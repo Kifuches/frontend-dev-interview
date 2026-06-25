@@ -1,11 +1,12 @@
 ---
-title: "RxJS"
-section: "RxJS"
-subsection: "Core concepts"
+title: RxJS
+section: RxJS
+subsection: Core concepts
 order: 10
-description: "Материал из большого списка вопросов для собеседования: RxJS."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description: RxJS.
+source: Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md
 ---
+
 # **Часть 2. RxJS**
 
 Это почти половина Angular интервью.
@@ -49,11 +50,11 @@ source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab
 Ожидают:
 
 ```ts
-takeUntilDestroyed()
+takeUntilDestroyed();
 
-DestroyRef
+DestroyRef;
 
-AsyncPipe
+AsyncPipe;
 ```
 
 ---

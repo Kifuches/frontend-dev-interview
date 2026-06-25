@@ -1,14 +1,13 @@
 ---
-title: "Performance"
-section: "Performance"
-subsection: "Frontend performance"
+title: Performance
+section: Performance
+subsection: Frontend performance
 order: 10
-description: "Материал из большого списка вопросов для собеседования: Performance."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description: Performance.
+source: Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md
 ---
-# **Часть 6. Performance**
 
-Очень любят.
+# **Часть 6. Performance**
 
 Например:
 

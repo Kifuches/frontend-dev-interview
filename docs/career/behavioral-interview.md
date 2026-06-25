@@ -1,11 +1,12 @@
 ---
-title: "Поведенческие вопросы"
-section: "Career"
-subsection: "Behavioral interview"
+title: Поведенческие вопросы
+section: Career
+subsection: Behavioral interview
 order: 10
-description: "Материал из большого списка вопросов для собеседования: Поведенческие вопросы."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description: Поведенческие вопросы.
+source: Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md
 ---
+
 # **Часть 14. Поведенческие вопросы**
 
 Практически всегда есть вопросы уровня Senior:

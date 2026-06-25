@@ -1,11 +1,12 @@
 ---
-title: "JavaScript и Event Loop"
-section: "JavaScript"
-subsection: "Event Loop"
+title: JavaScript и Event Loop
+section: JavaScript
+subsection: Event Loop
 order: 10
-description: "Материал из большого списка вопросов для собеседования: JavaScript и Event Loop."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description: JavaScript, Event Loop.
+source: Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md
 ---
+
 # **Часть 3. JavaScript**
 
 Очень многие компании начинают именно с JS.
@@ -17,13 +18,13 @@ source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab
 Объяснить
 
 ```ts
-Promise
+Promise;
 
-setTimeout
+setTimeout;
 
-queueMicrotask
+queueMicrotask;
 
-requestAnimationFrame
+requestAnimationFrame;
 ```
 
 Что выполнится первым?

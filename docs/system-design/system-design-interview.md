@@ -1,11 +1,12 @@
 ---
-title: "System Design"
-section: "System Design"
-subsection: "Frontend system design"
+title: System Design
+section: System Design
+subsection: Frontend system design
 order: 10
-description: "Материал из большого списка вопросов для собеседования: System Design."
-source: "Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md"
+description: System Design.
+source: Вопросы+для+собесов+aad0833b-ac31-4dfd-98c4-f5ea8050ab0e.md
 ---
+
 # **Часть 13. System Design (самая модная тема 2026)**
 
 Практически все Senior интервью содержат такой этап.
