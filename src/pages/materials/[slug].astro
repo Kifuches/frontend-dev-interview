@@ -36,13 +36,81 @@ const { Content } = material.module;
       </div>
       <Content />
     </article>
-    <aside class="toc" aria-label="Информация о материале">
-      <h2>Материал</h2>
-      <p><strong>{material.stack}</strong></p>
-      <p>{material.category}</p>
-      <p>{material.words} слов · {material.minutes} мин чтения</p>
-      <p><a class="chip" href={materialsUrl}>К каталогу</a></p>
+    <aside class="toc" aria-label="Оглавление материала">
+      <h2>Оглавление</h2>
+      {
+        material.headings.length ? (
+          <nav>
+            {material.headings.map((heading) => (
+              <a class={`toc-link depth-${heading.depth}`} href={`#${heading.slug}`} data-toc-link>
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+        ) : (
+          <p><a class="chip" href={materialsUrl}>К каталогу</a></p>
+        )
+      }
     </aside>
+    <script is:inline>
+      {
+        const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+        const headings = tocLinks
+          .map((link) => {
+            const id = decodeURIComponent(link.getAttribute('href')?.slice(1) ?? '');
+
+            return {
+              link,
+              heading: document.getElementById(id),
+            };
+          })
+          .filter((item) => item.heading);
+
+        let frame = 0;
+
+        const setActiveLink = (activeLink) => {
+          for (const link of tocLinks) {
+            const isActive = link === activeLink;
+
+            link.classList.toggle('is-active', isActive);
+            if (isActive) {
+              link.setAttribute('aria-current', 'true');
+            } else {
+              link.removeAttribute('aria-current');
+            }
+          }
+        };
+
+        const updateActiveHeading = () => {
+          frame = 0;
+
+          if (!headings.length) return;
+
+          const headerOffset = 112;
+          let active = headings[0];
+
+          for (const item of headings) {
+            if (item.heading.getBoundingClientRect().top <= headerOffset) {
+              active = item;
+            } else {
+              break;
+            }
+          }
+
+          setActiveLink(active.link);
+        };
+
+        const scheduleUpdate = () => {
+          if (frame) return;
+          frame = requestAnimationFrame(updateActiveHeading);
+        };
+
+        updateActiveHeading();
+        window.addEventListener('scroll', scheduleUpdate, { passive: true });
+        window.addEventListener('resize', scheduleUpdate);
+        window.addEventListener('hashchange', scheduleUpdate);
+      }
+    </script>
   </main>
   <Footer />
 </BaseLayout>

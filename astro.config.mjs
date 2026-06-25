@@ -75,12 +75,48 @@ function openExternalLinksInNewTab() {
   };
 }
 
+function highlightImportantBlocks() {
+  return (tree) => {
+    const visit = (node) => {
+      if (node && typeof node === 'object') {
+        const firstChild = Array.isArray(node.children) ? node.children[0] : null;
+
+        if (
+          node.type === 'element' &&
+          node.tagName === 'p' &&
+          firstChild?.type === 'text' &&
+          firstChild.value.startsWith('Важно: ')
+        ) {
+          firstChild.value = firstChild.value.replace(/^Важно:\s*/, '');
+          node.properties = {
+            ...node.properties,
+            className: [
+              ...(Array.isArray(node.properties?.className)
+                ? node.properties.className
+                : node.properties?.className
+                  ? [node.properties.className]
+                  : []),
+              'important-block',
+            ],
+          };
+        }
+
+        if (Array.isArray(node.children)) {
+          node.children.forEach(visit);
+        }
+      }
+    };
+
+    visit(tree);
+  };
+}
+
 export default defineConfig({
   site: 'https://kifuches.github.io',
   base: '/frontend-dev-interview',
   markdown: {
     remarkPlugins: [rewriteMarkdownResourceLinks],
-    rehypePlugins: [openExternalLinksInNewTab],
+    rehypePlugins: [openExternalLinksInNewTab, highlightImportantBlocks],
     shikiConfig: {
       themes: {
         light: 'github-light',

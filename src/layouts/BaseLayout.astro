@@ -695,10 +695,20 @@ const { title, description = 'Материалы для подготовки к 
 
   .article :where(h2, h3) {
     margin-top: 2.1em;
+    scroll-margin-top: 96px;
   }
 
   .article :where(p, li) {
     color: #344054;
+  }
+
+  .article p.important-block {
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: var(--green-soft);
+    box-shadow: inset 3px 0 0 var(--green);
+    color: var(--green);
+    font-weight: 700;
   }
 
   .article a {
@@ -765,6 +775,8 @@ const { title, description = 'Материалы для подготовки к 
   .toc {
     position: sticky;
     top: 82px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 16px;
@@ -777,6 +789,42 @@ const { title, description = 'Материалы для подготовки к 
     margin: 0 0 12px;
     color: var(--ink);
     font-size: 1rem;
+  }
+
+  .toc nav {
+    display: grid;
+    gap: 4px;
+  }
+
+  .toc-link {
+    display: block;
+    border-radius: 5px;
+    padding: 5px 7px;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  .toc-link.depth-3 {
+    margin-left: 12px;
+    color: var(--faint);
+    font-size: 0.8rem;
+  }
+
+  .toc-link:hover {
+    background: var(--soft);
+    color: var(--accent-strong);
+  }
+
+  .toc-link.is-active {
+    background: var(--accent-soft);
+    box-shadow: inset 3px 0 0 var(--accent);
+    color: var(--accent-strong);
+    font-weight: 850;
+  }
+
+  .toc-link.depth-3.is-active {
+    color: var(--accent-strong);
   }
 
   .footer {

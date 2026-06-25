@@ -5,6 +5,12 @@ export type MaterialModule = {
   compiledContent?: () => string;
 };
 
+export type MaterialHeading = {
+  depth: number;
+  slug: string;
+  text: string;
+};
+
 export type Material = {
   slug: string;
   path: string;
@@ -20,6 +26,7 @@ export type Material = {
   words: number;
   excerpt: string;
   searchText: string;
+  headings: MaterialHeading[];
   module: MaterialModule;
 };
 
@@ -47,6 +54,39 @@ function slugify(value: string) {
     .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 90);
+}
+
+function cleanHeading(value: string) {
+  return value
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/[*_~]/g, '')
+    .replace(/<[^>]+>/g, '')
+    .trim();
+}
+
+function extractHeadings(module: MaterialModule) {
+  const raw = module.rawContent?.() ?? '';
+  const withoutCodeBlocks = raw.replace(/```[\s\S]*?```/g, '');
+  const usedSlugs = new Map<string, number>();
+  const headings: MaterialHeading[] = [];
+  const headingPattern = /^(#{2,3})\s+(.+)$/gm;
+  let match: RegExpExecArray | null;
+
+  while ((match = headingPattern.exec(withoutCodeBlocks))) {
+    const text = cleanHeading(match[2]);
+    const baseSlug = slugify(text);
+    const count = usedSlugs.get(baseSlug) ?? 0;
+
+    usedSlugs.set(baseSlug, count + 1);
+    headings.push({
+      depth: match[1].length,
+      slug: count ? `${baseSlug}-${count}` : baseSlug,
+      text,
+    });
+  }
+
+  return headings;
 }
 
 function cleanTitle(value: string) {
@@ -152,6 +192,7 @@ export const materials = Object.entries(modules)
       words,
       excerpt: text.split(' ').slice(0, 30).join(' '),
       searchText: text,
+      headings: extractHeadings(module),
       module,
     };
   })
