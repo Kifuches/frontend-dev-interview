@@ -15,7 +15,7 @@ const searchIndex = materials.map((material) => ({
   searchText: [
     material.title,
     material.section,
-    material.subsection,
+    material.subsection ?? '',
     material.category,
     material.excerpt,
     material.searchText,
@@ -61,6 +61,13 @@ const searchIndex = materials.map((material) => ({
               <span>{group.count}</span>
             </summary>
             <div class="nav-children">
+              {group.materials.length > 0 && (
+                <div class="nav-direct-materials">
+                  {group.materials.map((material) => (
+                    <a href={`${base}materials/${material.slug}/`}>{material.title}</a>
+                  ))}
+                </div>
+              )}
               {group.subsections.map((subsection) => (
                 <div class="nav-subsection">
                   <p>{subsection.title}</p>
@@ -124,7 +131,7 @@ const searchIndex = materials.map((material) => ({
         .map((item) => {
           const haystack = normalize(item.searchText);
           const title = normalize(item.title);
-          const section = normalize(`${item.section} ${item.subsection}`);
+          const section = normalize(`${item.section} ${item.subsection ?? ''}`);
           const score = terms.reduce((sum, term) => {
             if (title.includes(term)) return sum + 8;
             if (section.includes(term)) return sum + 5;
@@ -153,7 +160,7 @@ const searchIndex = materials.map((material) => ({
         .map(
           (item) => `
             <a class="search-result" href="${escapeHtml(item.url)}">
-              <span>${escapeHtml(item.section)} / ${escapeHtml(item.subsection)}</span>
+              <span>${escapeHtml(item.subsection ? `${item.section} / ${item.subsection}` : item.section)}</span>
               <strong>${escapeHtml(item.title)}</strong>
               <small>${escapeHtml(item.excerpt)}</small>
             </a>

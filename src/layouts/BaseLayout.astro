@@ -371,7 +371,8 @@ const { title, description = 'Материалы для подготовки к 
     padding-left: 12px;
   }
 
-  .nav-subsection {
+  .nav-subsection,
+  .nav-direct-materials {
     display: grid;
     gap: 4px;
   }
@@ -382,7 +383,8 @@ const { title, description = 'Материалы для подготовки к 
     font-size: 0.82rem;
   }
 
-  .nav-subsection a {
+  .nav-subsection a,
+  .nav-direct-materials a {
     display: block;
     overflow: hidden;
     border-radius: 5px;
@@ -392,19 +394,22 @@ const { title, description = 'Материалы для подготовки к 
     text-overflow: ellipsis;
   }
 
-  .nav-subsection a:hover {
+  .nav-subsection a:hover,
+  .nav-direct-materials a:hover {
     background: var(--soft);
     color: var(--accent-strong);
   }
 
   .nav-subsection a.is-active,
+  .nav-direct-materials a.is-active,
   .stack-link.is-active {
     background: var(--accent-soft);
     color: var(--accent-strong);
     font-weight: 850;
   }
 
-  .nav-subsection a.is-active {
+  .nav-subsection a.is-active,
+  .nav-direct-materials a.is-active {
     box-shadow: inset 3px 0 0 var(--accent);
   }
 

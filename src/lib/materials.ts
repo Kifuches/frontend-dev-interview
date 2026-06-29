@@ -18,7 +18,7 @@ export type Material = {
   title: string;
   category: string;
   section: string;
-  subsection: string;
+  subsection?: string;
   order: number;
   format: 'questions' | 'answers' | 'tasks' | 'topics' | 'analysis' | 'resume' | 'material';
   stack: 'Angular' | 'JavaScript' | 'React' | 'Career' | 'General';
@@ -184,7 +184,7 @@ export const materials = Object.entries(modules)
       title,
       category: formatLabels[format],
       section: stringFromFrontmatter(module, 'section') ?? stack,
-      subsection: stringFromFrontmatter(module, 'subsection') ?? formatLabels[format],
+      subsection: stringFromFrontmatter(module, 'subsection'),
       order: numberFromFrontmatter(module, 'order') ?? 999,
       format,
       stack,
@@ -199,7 +199,7 @@ export const materials = Object.entries(modules)
   .sort(
     (a, b) =>
       a.section.localeCompare(b.section, 'ru') ||
-      a.subsection.localeCompare(b.subsection, 'ru') ||
+      (a.subsection ?? '').localeCompare(b.subsection ?? '', 'ru') ||
       a.order - b.order ||
       a.title.localeCompare(b.title, 'ru'),
   );
@@ -208,16 +208,21 @@ export const stacks = Array.from(new Set(materials.map((material) => material.se
 
 export const navigationTree = stacks.map((section) => {
   const sectionMaterials = materials.filter((material) => material.section === section);
-  const subsections = Array.from(new Set(sectionMaterials.map((material) => material.subsection))).map(
+  const directMaterials = sectionMaterials.filter((material) => !material.subsection);
+  const subsectionMaterials = sectionMaterials.filter((material) => material.subsection);
+  const subsections = Array.from(
+    new Set(subsectionMaterials.map((material) => material.subsection)),
+  ).map(
     (subsection) => ({
       title: subsection,
-      materials: sectionMaterials.filter((material) => material.subsection === subsection),
+      materials: subsectionMaterials.filter((material) => material.subsection === subsection),
     }),
   );
 
   return {
     section,
     count: sectionMaterials.length,
+    materials: directMaterials,
     subsections,
   };
 });

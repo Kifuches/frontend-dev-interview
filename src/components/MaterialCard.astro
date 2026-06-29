@@ -25,7 +25,7 @@ const tone =
   <div>
     <div class="meta-row">
       <span class="tag" data-tone={tone}>{material.section}</span>
-      <span class="tag">{material.subsection}</span>
+      {material.subsection && <span class="tag">{material.subsection}</span>}
     </div>
     <h3>{material.title}</h3>
     <p>{material.excerpt}</p>
