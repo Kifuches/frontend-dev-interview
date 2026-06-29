@@ -1,3 +1,12 @@
+---
+title: Основы Angular
+section: Angular
+subsection: Base
+order: 70
+description: Lifecycle hooks, ngOnInit, ngAfterViewInit, ViewChild
+source:
+---
+
 # Основы Angular
 
 ## Как работает bootstrap Angular приложения?
