@@ -14,6 +14,116 @@ function slugifyHeading(value) {
   return slugify(decodeURIComponent(value).replace(/^#/, ''));
 }
 
+function markImportantBlocks() {
+  return (tree) => {
+    if (!Array.isArray(tree.children)) return;
+
+    const isParagraph = (node) => node?.type === 'paragraph' && Array.isArray(node.children);
+    const firstTextChildIndex = (node) =>
+      isParagraph(node) ? node.children.findIndex((child) => child.type === 'text') : -1;
+    const findEndMarkerIndex = (node) =>
+      isParagraph(node)
+        ? node.children.findIndex(
+            (child) => child.type === 'text' && typeof child.value === 'string' && child.value.includes(']]'),
+          )
+        : -1;
+
+    const startsImportantBlock = (node) => {
+      const firstChild = isParagraph(node) ? node.children[firstTextChildIndex(node)] : null;
+
+      return firstChild?.type === 'text' && /^Важно:\s*\[\[/.test(firstChild.value);
+    };
+
+    const stripStartMarker = (node) => {
+      const nextNode = structuredClone(node);
+      const nextFirstChild = nextNode.children[firstTextChildIndex(nextNode)];
+
+      nextFirstChild.value = nextFirstChild.value.replace(/^Важно:\s*\[\[\s*/, '');
+
+      return nextNode;
+    };
+
+    const splitEndMarker = (node) => {
+      const endMarkerIndex = findEndMarkerIndex(node);
+
+      if (endMarkerIndex === -1) {
+        return { importantNode: node, remainderNode: null };
+      }
+
+      const importantNode = structuredClone(node);
+      const remainderNode = structuredClone(node);
+      const importantChild = importantNode.children[endMarkerIndex];
+      const remainderChild = remainderNode.children[endMarkerIndex];
+      const markerOffset = importantChild.value.indexOf(']]');
+
+      importantChild.value = importantChild.value.slice(0, markerOffset).replace(/\s*$/, '');
+      importantNode.children = importantNode.children.slice(0, endMarkerIndex + 1);
+
+      remainderChild.value = remainderChild.value.slice(markerOffset + 2).replace(/^\s*/, '');
+      remainderNode.children = remainderNode.children.slice(endMarkerIndex);
+
+      return { importantNode, remainderNode };
+    };
+
+    const isEmptyParagraph = (node) =>
+      isParagraph(node) &&
+      node.children.every((child) => typeof child.value !== 'string' || !child.value.trim());
+
+    const endsImportantBlock = (node) => findEndMarkerIndex(node) !== -1;
+
+    const nextChildren = [];
+
+    for (let index = 0; index < tree.children.length; index += 1) {
+      const node = tree.children[index];
+
+      if (!startsImportantBlock(node)) {
+        nextChildren.push(node);
+        continue;
+      }
+
+      const importantChildren = [];
+      let remainderNode = null;
+      let isClosed = false;
+      const firstNode = stripStartMarker(node);
+
+      if (endsImportantBlock(firstNode)) {
+        const { importantNode: onlyNode, remainderNode: onlyRemainderNode } = splitEndMarker(firstNode);
+        if (!isEmptyParagraph(onlyNode)) importantChildren.push(onlyNode);
+        remainderNode = onlyRemainderNode;
+        isClosed = true;
+      } else if (!isEmptyParagraph(firstNode)) {
+        importantChildren.push(firstNode);
+      }
+
+      while (!isClosed && index + 1 < tree.children.length && !endsImportantBlock(tree.children[index + 1])) {
+        index += 1;
+        importantChildren.push(tree.children[index]);
+      }
+
+      if (!isClosed && index + 1 < tree.children.length) {
+        index += 1;
+        const { importantNode: lastNode, remainderNode: lastRemainderNode } = splitEndMarker(tree.children[index]);
+        if (!isEmptyParagraph(lastNode)) importantChildren.push(lastNode);
+        remainderNode = lastRemainderNode;
+      }
+
+      nextChildren.push({
+        type: 'blockquote',
+        data: {
+          hProperties: {
+            className: ['important-block'],
+          },
+        },
+        children: importantChildren,
+      });
+
+      if (remainderNode && !isEmptyParagraph(remainderNode)) nextChildren.push(remainderNode);
+    }
+
+    tree.children = nextChildren;
+  };
+}
+
 function rewriteMarkdownResourceLinks() {
   return (tree) => {
     const visit = (node) => {
@@ -115,7 +225,7 @@ export default defineConfig({
   site: 'https://kifuches.github.io',
   base: '/frontend-dev-interview',
   markdown: {
-    remarkPlugins: [rewriteMarkdownResourceLinks],
+    remarkPlugins: [markImportantBlocks, rewriteMarkdownResourceLinks],
     rehypePlugins: [openExternalLinksInNewTab, highlightImportantBlocks],
     shikiConfig: {
       themes: {
