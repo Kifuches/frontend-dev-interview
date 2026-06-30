@@ -14,6 +14,73 @@ function slugifyHeading(value) {
   return slugify(decodeURIComponent(value).replace(/^#/, ''));
 }
 
+const inlineHighlightColors = new Set(['orange', 'green', 'rose', 'blue', 'yellow']);
+const inlineHighlightPattern = /\[\[([a-z]+)\]([^\]]+)\]/g;
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function highlightInlineMarkers() {
+  return (tree) => {
+    const visit = (node) => {
+      if (!node || typeof node !== 'object') return;
+
+      if (Array.isArray(node.children)) {
+        for (let index = node.children.length - 1; index >= 0; index -= 1) {
+          const child = node.children[index];
+
+          if (child?.type !== 'text' || typeof child.value !== 'string') {
+            visit(child);
+            continue;
+          }
+
+          const parts = [];
+          let lastIndex = 0;
+          let match;
+
+          inlineHighlightPattern.lastIndex = 0;
+
+          while ((match = inlineHighlightPattern.exec(child.value))) {
+            const [, color, text] = match;
+
+            if (!inlineHighlightColors.has(color)) continue;
+            if (match.index > lastIndex) {
+              parts.push({
+                type: 'text',
+                value: child.value.slice(lastIndex, match.index),
+              });
+            }
+
+            parts.push({
+              type: 'html',
+              value: `<mark data-highlight-color="${color}">${escapeHtml(text)}</mark>`,
+            });
+            lastIndex = match.index + match[0].length;
+          }
+
+          if (!parts.length) continue;
+
+          if (lastIndex < child.value.length) {
+            parts.push({
+              type: 'text',
+              value: child.value.slice(lastIndex),
+            });
+          }
+
+          node.children.splice(index, 1, ...parts);
+        }
+      }
+    };
+
+    visit(tree);
+  };
+}
+
 function markImportantBlocks() {
   return (tree) => {
     if (!Array.isArray(tree.children)) return;
@@ -225,7 +292,7 @@ export default defineConfig({
   site: 'https://kifuches.github.io',
   base: '/frontend-dev-interview',
   markdown: {
-    remarkPlugins: [markImportantBlocks, rewriteMarkdownResourceLinks],
+    remarkPlugins: [markImportantBlocks, rewriteMarkdownResourceLinks, highlightInlineMarkers],
     rehypePlugins: [openExternalLinksInNewTab, highlightImportantBlocks],
     shikiConfig: {
       themes: {

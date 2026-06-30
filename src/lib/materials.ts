@@ -56,8 +56,12 @@ function slugify(value: string) {
     .slice(0, 90);
 }
 
+function cleanInlineHighlights(value: string) {
+  return value.replace(/\[\[[a-z]+\]([^\]]+)\]/g, '$1');
+}
+
 function cleanHeading(value: string) {
-  return value
+  return cleanInlineHighlights(value)
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/`([^`]+)`/g, '$1')
     .replace(/[*_~]/g, '')
@@ -132,6 +136,7 @@ function plainText(module: MaterialModule) {
   return raw
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[\[[a-z]+\]([^\]]+)\]/g, '$1')
     .replace(/[#*_>\-[\]()]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -143,7 +148,7 @@ function titleFrom(module: MaterialModule, fileName: string) {
   const frontmatterTitle = module.frontmatter?.title;
 
   if (typeof frontmatterTitle === 'string') return frontmatterTitle;
-  if (heading) return heading.replace(/\*/g, '').trim();
+  if (heading) return cleanInlineHighlights(heading).replace(/\*/g, '').trim();
 
   return cleanTitle(fileName);
 }
