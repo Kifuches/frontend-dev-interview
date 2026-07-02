@@ -432,7 +432,7 @@ export class OrdersPageComponent implements OnInit {
 
 Lifecycle в Angular отражает этапы создания, проверки и уничтожения компонента. `constructor` нужен для создания instance и DI, `ngOnChanges` реагирует на input changes, `ngOnInit` запускается один раз после initial inputs, `ngAfterContentInit` относится к projected content, а `ngAfterViewInit` - к собственному template view. Поэтому `ViewChild` нельзя надежно читать раньше `ngAfterViewInit`: view еще не построен. Для cleanup используют `ngOnDestroy`, `DestroyRef` или `takeUntilDestroyed`. Для DOM-задач после фактического рендера сейчас часто подходят `afterNextRender` и `afterEveryRender`.
 
-## Полезные ссылки
+## Источники и лицензия
 
 - [Angular Component Lifecycle](https://angular.dev/guide/components/lifecycle)
 - [Angular Queries](https://angular.dev/guide/components/queries)

@@ -57,6 +57,29 @@ async function fetchUser() {
 `await` ставит выполнение на паузу, пока `fetch` не вернёт результат.
 После завершения, результат передаётся в переменную и выполнение продолжается.
 
+```ts
+console.log('start');
+
+async function run() {
+  console.log('before await');
+  await Promise.resolve();
+  console.log('after await');
+}
+
+run();
+
+console.log('end');
+
+// Порядок:
+
+// start
+// before await
+// end
+// after await
+```
+
+Почему: код после `await` продолжает выполнение как microtask.
+
 ## Обработка ошибок
 
 С `async/await` удобно использовать `try/catch`:
@@ -84,3 +107,7 @@ async function getData() {
 - `async/await` делает асинхронный код понятным, линейным и чистым.
 - Он не заменяет промисы, а упрощает их использование.
 - Обязательно обрабатывайте ошибки через `try/catch` или `.catch()`.
+
+## Источники и лицензия
+
+- [async/await](./javascript-promise-async-await.md)

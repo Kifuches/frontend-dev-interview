@@ -325,7 +325,7 @@ Senior-ответ: "Я бы не заменяла `NgRx` только потом
 
 `Signals` - это модель синхронного реактивного состояния в Angular. `signal()` хранит writable state, `computed()` вычисляет readonly derived state, `effect()` нужен для side effects. Signals удобны для локального UI state и derived values, а RxJS остается лучше для async-потоков, отмены запросов, debounce и сложной композиции событий. NgRx можно заменить signals-сервисом в простых feature-сценариях, но для большого глобального state с actions, effects и devtools NgRx все еще может быть оправдан.
 
-## Полезные ссылки
+## Источники и лицензия
 
 - [Angular Signals](https://angular.dev/guide/signals)
 - [RxJS interop with Angular signals](https://angular.dev/ecosystem/rxjs-interop)
